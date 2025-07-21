@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Nota - Banjarsari.net (Firebase)</title>
+    <title>Admin Nota - Banjarsari.net</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         #admin-content, #nota-modal, #loading-indicator { display: none; }
+        #loading-indicator { display: flex; } /* Tampilkan loading secara default */
         @media print {
             body * { visibility: hidden; }
             #nota-modal-content, #nota-modal-content * { visibility: visible; }
@@ -114,10 +115,9 @@
 
 
     <script>
-        // --- BAGIAN LOGIN (Tetap Sama) ---
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('loading-indicator').style.display = 'flex';
-            const password = 'csbumdesakarangtaruna'; // GANTI PASSWORD INI
+            const password = 'adminbanjarsari'; // GANTI PASSWORD INI
             if (sessionStorage.getItem('auth') === 'true') {
                 setupNotaApp();
             } else {
@@ -137,38 +137,31 @@
             document.getElementById('admin-content').style.display = 'block';
         };
         
-        // --- BAGIAN APLIKASI NOTA (Diubah untuk Firebase) ---
         function setupNotaApp() {
-            // 1. KONEKSI FIREBASE
-            // Ganti objek di bawah ini dengan konfigurasi dari dashboard Firebase Anda
+            // 1. KONEKSI FIREBASE - SUDAH TERISI OTOMATIS
             const firebaseConfig = {
-              const firebaseConfig = {
-  apiKey: "AIzaSyDTdwQbcAK2vJ9I8I7lXraDogBm8SpbREU",
-  authDomain: "nota-banjarsari.firebaseapp.com",
-  databaseURL: "https://nota-banjarsari-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "nota-banjarsari",
-  storageBucket: "nota-banjarsari.firebasestorage.app",
-  messagingSenderId: "1004961764429",
-  appId: "1:1004961764429:web:52ffbadb986e29c98e3804"
+              apiKey: "AIzaSyDTdwQbcAK2vJ9I8I7lXraDogBm8SpbREU",
+              authDomain: "nota-banjarsari.firebaseapp.com",
+              databaseURL: "https://nota-banjarsari-default-rtdb.asia-southeast1.firebasedatabase.app",
+              projectId: "nota-banjarsari",
+              storageBucket: "nota-banjarsari.appspot.com",
+              messagingSenderId: "1004961764429",
+              appId: "1:1004961764429:web:52ffbadb986e29c98e3804"
             };
 
-            // Inisialisasi Firebase
             try {
                 firebase.initializeApp(firebaseConfig);
             } catch(e) {
                 console.error("Firebase initialization error:", e);
-                alert("Gagal menginisialisasi database. Periksa konfigurasi Firebase Anda.");
-                document.getElementById('loading-indicator').innerText = 'Koneksi Gagal.';
+                document.getElementById('loading-indicator').innerHTML = '<p class="text-red-500 font-bold">Koneksi Gagal! Periksa `firebaseConfig` di kode Anda.</p>';
                 return;
             }
 
             const database = firebase.database();
             const notasRef = database.ref('notas');
 
-            // Cache untuk data
             let daftarNotaCache = [];
 
-            // 2. DEFINISI ELEMEN HTML
             const formNota = document.getElementById('form-nota');
             const notaListContainer = document.getElementById('nota-list-container');
             const tombolHapusSemua = document.getElementById('tombol-hapus-semua');
@@ -176,8 +169,6 @@
             const tombolTutupModal = document.getElementById('tombol-tutup-modal');
             const tombolCetakModal = document.getElementById('tombol-cetak-modal');
             const tombolSimpanGambar = document.getElementById('tombol-simpan-gambar');
-
-            // 3. FUNGSI UTAMA (CREATE, READ, DELETE)
 
             formNota.addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -200,8 +191,6 @@
 
             notasRef.orderByChild('timestamp').on('value', (snapshot) => {
                 showAdminContent();
-                notaListContainer.innerHTML = '';
-                daftarNotaCache = [];
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     const notasArray = Object.keys(data).map(key => ({
@@ -216,27 +205,23 @@
                 }
             }, (error) => {
                 console.error("Firebase read error:", error);
-                alert("Gagal membaca data dari database. Periksa koneksi internet dan aturan keamanan Firebase Anda.");
-                document.getElementById('loading-indicator').innerText = 'Gagal Baca Database.';
+                document.getElementById('nota-list-container').innerHTML = '<p class="text-red-500 text-center py-4">Gagal membaca data. Periksa aturan keamanan Firebase.</p>';
             });
 
             window.hapusNota = (id, nomorNota) => {
                 if (confirm(`Apakah Anda yakin ingin menghapus nota ${nomorNota}?`)) {
-                    notasRef.child(id).remove()
-                        .catch(err => alert('Gagal menghapus:', err.message));
+                    notasRef.child(id).remove().catch(err => alert('Gagal menghapus:', err.message));
                 }
             };
             
             tombolHapusSemua.addEventListener('click', () => {
-                if (confirm('PERINGATAN! Semua data nota di database akan dihapus. Lanjutkan?')) {
-                    notasRef.remove()
-                        .catch(err => alert('Gagal menghapus semua data:', err.message));
+                if (confirm('PERINGATAN! Semua data nota di database akan dihapus permanen. Lanjutkan?')) {
+                    notasRef.remove().catch(err => alert('Gagal menghapus semua data:', err.message));
                 }
             });
 
-            // 4. FUNGSI TAMPILAN (RENDER & MODAL)
             const renderNotas = (notas) => {
-                 if (notas.length === 0) {
+                if (notas.length === 0) {
                     notaListContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada nota yang dibuat.</p>';
                     return;
                 }
@@ -295,10 +280,9 @@
                 const modalContent = document.getElementById('nota-modal-content');
                 const nomorNota = document.getElementById('modal-id-nota').innerText;
                 
-                // Opsi untuk meningkatkan kualitas gambar
                 const options = {
-                    scale: 2, // Menaikkan skala render 2x lipat
-                    useCORS: true // Diperlukan jika ada gambar dari domain lain
+                    scale: 2,
+                    useCORS: true
                 };
 
                 html2canvas(modalContent, options).then(canvas => {

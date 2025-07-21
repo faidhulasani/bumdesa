@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banjarsari.net - WiFi oleh BUMDESA & Karangtaruna Banjarsari</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b5d1365a-ad16-48e1-825e-eb893f631ef2.png');
+            background-size: cover;
+            background-position: center;
+        }
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .coverage-map {
+            background: url('https://placehold.co/1200x600') center/cover;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9f45d750-feb5-482c-8f8c-6252cf8ef7d7.png" alt="Logo Banjarsari.net dengan desain modern berbentuk gelombang WiFi berwarna biru" class="h-10">
+                <span class="text-xl font-bold text-blue-600">banjarsari.<span class="text-orange-500">net</span></span>
+            </div>
+            
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium">Beranda</a>
+                <a href="#packages" class="text-gray-700 hover:text-blue-600 font-medium">Paket</a>
+                <a href="#coverage" class="text-gray-700 hover:text-blue-600 font-medium">Area Layanan</a>
+                <a href="#about" class="text-gray-700 hover:text-blue-600 font-medium">Tentang Kami</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600 font-medium">Kontak</a>
+            </nav>
+            
+            <button class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <section id="home" class="hero text-white py-20 md:py-32 flex items-center">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Internet Cepat & Stabil untuk Banjarsari</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Dikelola oleh BUMDESA dan Karangtaruna Banjarsari untuk masyarakat dengan harga terjangkau</p>
+            <div class="space-x-4">
+                <a href="#packages" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg inline-block transition duration-300">Lihat Paket</a>
+                <a href="#contact" class="bg-transparent hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 border-2 border-white rounded-lg inline-block transition duration-300">Hubungi Kami</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Keunggulan banjarsari.net</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6 rounded-lg bg-gray-50 hover:bg-blue-50 transition duration-300">
+                    <div class="bg-blue-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-bolt text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Kecepatan Stabil</h3>
+                    <p class="text-gray-600">Jaringan khusus lokal dengan bandwidth besar untuk kecepatan maksimal</p>
+                </div>
+                
+                <div class="text-center p-6 rounded-lg bg-gray-50 hover:bg-blue-50 transition duration-300">
+                    <div class="bg-orange-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-headset text-orange-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Layanan 24/7</h3>
+                    <p class="text-gray-600">Tim teknis siap membantu kapanpun Anda membutuhkan</p>
+                </div>
+                
+                <div class="text-center p-6 rounded-lg bg-gray-50 hover:bg-blue-50 transition duration-300">
+                    <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-hand-holding-usd text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">Harga Terjangkau</h3>
+                    <p class="text-gray-600">Internet cepat dengan harga yang ramah di kantong</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="packages" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-4 text-gray-800">Pilihan Paket Internet</h2>
+            <p class="text-center text-gray-600 max-w-2xl mx-auto mb-12">Berbagai pilihan paket sesuai kebutuhan Anda dengan kecepatan yang stabil dan harga bersaing</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex flex-col">
+                    <div class="bg-blue-600 text-white py-4 px-6 text-center">
+                        <h3 class="text-xl font-bold">Paket Personal</h3>
+                    </div>
+                    <div class="p-6 text-center flex flex-col flex-grow">
+                        <div class="flex-grow">
+                            <p class="text-5xl font-bold text-gray-800 mb-2">Rp120.000<span class="text-base font-normal text-gray-500">/bulan</span></p>
+                            <p class="text-gray-600 mb-6">Cocok untuk penggunaan pribadi dan keluarga kecil</p>
+                            <ul class="space-y-3 mb-8 text-left">
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>10 Mbps Unlimited</span>
+                                </li>
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Internet Cepat</span>
+                                </li>
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Support 24/7</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="https://wa.me/6281252519377?text=Halo%2C%20saya%20tertarik%20untuk%20mendaftar%20Paket%20Personal%20di%20banjarsari.net." target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 inline-block">Daftar Sekarang</a>
+                    </div>
+                </div>
+                
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex flex-col">
+                    <div class="bg-orange-500 text-white py-4 px-6 text-center">
+                        <h3 class="text-xl font-bold">Paket Keluarga</h3>
+                    </div>
+                    <div class="p-6 text-center flex flex-col flex-grow">
+                         <div class="flex-grow">
+                            <p class="text-5xl font-bold text-gray-800 mb-2">Rp150.000<span class="text-base font-normal text-gray-500">/bulan</span></p>
+                            <p class="text-gray-600 mb-6">Ideal untuk keluarga dengan multiple device</p>
+                            <ul class="space-y-3 mb-8 text-left">
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>15 Mbps Unlimited</span>
+                                </li>
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Internet Cepat</span>
+                                </li>
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Hemat</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="https://wa.me/6281252519377?text=Halo%2C%20saya%20tertarik%20untuk%20mendaftar%20Paket%20Keluarga%20di%20banjarsari.net." target="_blank" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 inline-block">Daftar Sekarang</a>
+                    </div>
+                </div>
+                
+                <div class="package-card bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 flex flex-col">
+                    <div class="bg-purple-600 text-white py-4 px-6 text-center">
+                        <h3 class="text-xl font-bold">Paket Bisnis</h3>
+                    </div>
+                    <div class="p-6 text-center flex flex-col flex-grow">
+                        <div class="flex-grow">
+                            <p class="text-5xl font-bold text-gray-800 mb-2">Rp200.000<span class="text-base font-normal text-gray-500">/bulan</span></p>
+                            <p class="text-gray-600 mb-6">Untuk kebutuhan usaha dan bisnis Anda</p>
+                            <ul class="space-y-3 mb-8 text-left">
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>20 Mbps Unlimited</span>
+                                </li>
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Internet Cepat</span>
+                                </li>
+                                <li class="flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 mr-2"></i>
+                                    <span>Prioritas Support</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <a href="https://wa.me/6281252519377?text=Halo%2C%20saya%20tertarik%20untuk%20mendaftar%20Paket%20Bisnis%20di%20banjarsari.net." target="_blank" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 inline-block">Daftar Sekarang</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <p class="text-gray-600 mb-4">Tertarik dengan paket khusus atau promo lainnya?</p>
+                <a href="#contact" class="text-blue-600 hover:text-blue-800 font-medium">Hubungi tim sales kami <i class="fas fa-arrow-right ml-2"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="coverage" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+                    <h2 class="text-3xl font-bold mb-4 text-gray-800">Area Layanan Kami</h2>
+                    <p class="text-gray-600 mb-6">Kami terus memperluas jaringan untuk memberikan layanan terbaik bagi warga Banjarsari dan sekitarnya</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-700">Banjarsari Pusat</h4>
+                                <p class="text-gray-600">RT 01-05, RW 01-03</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-700">Banjarsari Utara</h4>
+                                <p class="text-gray-600">RT 06-08, RW 04-05</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <div>
+                                <h4 class="font-bold text-gray-700">Banjarsari Selatan</h4>
+                                <p class="text-gray-600">RT 09-12, RW 06-07</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <a href="#contact" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg inline-flex items-center transition duration-300">
+                            Periksa ketersediaan di alamat Anda
+                            <i class="fas fa-search-location ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 h-96 coverage-map rounded-lg shadow-lg"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/47c7be5c-f750-43bd-b78b-bb15dfdb09bd.png" alt="Tim BUMDESA dan Karangtaruna Banjarsari sedang bekerja di kantor dengan latar belakang desa yang asri" class="rounded-lg shadow-lg w-full">
+                </div>
+                
+                <div class="md:w-1/2 md:pl-12">
+                    <h2 class="text-3xl font-bold mb-4 text-gray-800">Tentang Banjarsari.net</h2>
+                    <p class="text-gray-600 mb-4">banjarsari.net adalah layanan internet WiFi lokal yang dikelola penuh oleh BUMDESA (Badan Usaha Milik Desa) dan Karangtaruna Banjarsari sebagai bentuk pemberdayaan ekonomi desa dan peningkatan kualitas hidup masyarakat.</p>
+                    <p class="text-gray-600 mb-6">Dengan infrastruktur yang terus kami kembangkan, kami berkomitmen untuk menyediakan akses internet yang cepat, stabil, dan terjangkau bagi seluruh warga Banjarsari.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-blue-600 mb-1">100+</h3>
+                            <p class="text-sm text-gray-600">Pelanggan Aktif</p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-orange-600 mb-1">FULL</h3>
+                            <p class="text-sm text-gray-600">Area Tercover</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-green-600 mb-1">24/7</h3>
+                            <p class="text-sm text-gray-600">Layanan Support</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h3 class="font-bold text-purple-600 mb-1">100%</h3>
+                            <p class="text-sm text-gray-600">Milik Desa</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Apa Kata Pelanggan Kami</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1b92d714-e5d9-46f1-9c3a-2bbc29ff9a09.png" alt="Pak Budi, pedagang di Pasar Banjarsari tersenyum memakai kemeja biru" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold">Pak Budi</h4>
+                            <p class="text-sm text-gray-600">Pedagang Pasar</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"Sejak berlangganan banjarsari.net, transaksi online saya jadi lebih lancar. Kecepatan internetnya stabil walaupun dipakai seharian."</p>
+                    <div class="mt-4 flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/5ac6b29a-6687-4c73-a8fb-6b6488d4789f.png" alt="Ibu Siti, guru SD Banjarsari dengan jilbab biru muda" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold">Ibu Siti</h4>
+                            <p class="text-sm text-gray-600">Guru SD</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"Anak-anak bisa belajar online dengan nyaman berkat internet dari banjarsari.net. Tim teknisi juga sangat responsif ketika ada kendala."</p>
+                    <div class="mt-4 flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7e32c85a-3251-4878-a180-dee18d44cd55.png" alt="Mas Andi, pengusaha warung kopi muda dengan kaos hitam" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold">Mas Andi</h4>
+                            <p class="text-sm text-gray-600">Pemilik Warung Kopi</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">"WiFi publik di warung kopi saya pakai banjarsari.net. Pelanggan senang bisa internetan sambil nongkrong, untung saya juga bertambah."</p>
+                    <div class="mt-4 flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">Siap Berlangganan?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Bergabunglah dengan ratusan warga Banjarsari yang telah menikmati internet cepat dan stabil</p>
+            <div class="space-y-4 md:space-y-0 md:space-x-4">
+                <a href="#contact" class="bg-white hover:bg-gray-100 text-blue-600 font-bold py-3 px-8 rounded-lg inline-block transition duration-300">Hubungi Kami</a>
+                <a href="https://wa.me/6281252519377?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20banjarsari.net" target="_blank" class="bg-transparent hover:bg-white hover:text-blue-600 text-white font-bold py-3 px-8 border-2 border-white rounded-lg inline-block transition duration-300">
+                    <i class="fab fa-whatsapp mr-2"></i> 0812-5251-9377
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-12">
+                    <h2 class="text-3xl font-bold mb-4 text-gray-800">Hubungi Kami</h2>
+                    <p class="text-gray-600 mb-6">Tim banjarsari.net siap membantu Anda 24 jam melalui berbagai saluran komunikasi berikut:</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-map-marker-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Kantor Kami</h4>
+                                <p class="text-gray-600">Ds. Banjarsari Kec. Jetis Kab. Mojokerto</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-green-100 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-green-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">Email</h4>
+                                <p class="text-gray-600">cs@banjarsari.net</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-orange-100 p-3 rounded-full mr-4">
+                                <i class="fab fa-whatsapp text-orange-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">WhatsApp</h4>
+                                <p class="text-gray-600">0812-5251-9377 (CS)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <h4 class="font-bold text-gray-800 mb-4">Jam Operasional</h4>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex justify-between py-2 border-b border-gray-200">
+                                <span class="text-gray-700">Senin-Minggu</span>
+                                <span class="font-medium">24 JAM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">Kirim Pesan</h3>
+                        <form action="https://formsubmit.co/cs@banjarsari.net" method="POST">
+                            <input type="hidden" name="_next" value="https://banjarsari.net/terima-kasih.html">
+                            <input type="hidden" name="_captcha" value="false">
+                            <input type="hidden" name="_subject" value="Pesan Baru dari Website banjarsari.net">
+
+                            <div class="mb-4">
+                                <label for="name" class="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="phone" class="block text-gray-700 font-medium mb-2">Nomor HP</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="message" class="block text-gray-700 font-medium mb-2">Pesan</label>
+                                <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Kirim Pesan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/c24b8270-6be2-4758-90a9-879bfa963926.png" alt="Logo Banjarsari.net versi putih dengan desain gelombang WiFi" class="h-10">
+                        <span class="text-xl font-bold">banjarsari.<span class="text-orange-500">net</span></span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Layanan internet desa yang dikelola oleh BUMDESA dan Karangtaruna Banjarsari untuk warga dengan prinsip gotong royong dan pemberdayaan ekonomi lokal.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Menu</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white">Beranda</a></li>
+                        <li><a href="#packages" class="text-gray-400 hover:text-white">Paket Internet</a></li>
+                        <li><a href="#coverage" class="text-gray-400 hover:text-white">Area Layanan</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white">Tentang Kami</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Syarat & Ketentuan</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Kebijakan Privasi</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2025 banjarsari.net - Layanan oleh BUMDESA & Karangtaruna Banjarsari. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

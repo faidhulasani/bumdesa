@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Nota - Banjarsari.net</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Sembunyikan konten admin dan modal secara default */
+        #admin-content, #nota-modal {
+            display: none;
+        }
+        
+        /* CSS Khusus untuk Mencetak Modal Nota */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #nota-modal-content, #nota-modal-content * {
+                visibility: visible;
+            }
+            #nota-modal-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                border: none;
+                box-shadow: none;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div id="admin-content" class="container mx-auto p-4 md:p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-gray-800">Panel Admin Nota</h1>
+            <p class="text-gray-600">Selamat datang, Admin! Kelola semua nota pelanggan di sini.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit no-print">
+                <h2 class="text-2xl font-bold mb-4">Buat Nota Baru</h2>
+                <form id="form-nota">
+                    <div class="mb-4">
+                        <label for="nama-pelanggan" class="block text-gray-700 font-medium mb-2">Nama Pelanggan</label>
+                        <input type="text" id="nama-pelanggan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="kontak-pelanggan" class="block text-gray-700 font-medium mb-2">Kontak (HP/Email)</label>
+                        <input type="text" id="kontak-pelanggan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="keterangan" class="block text-gray-700 font-medium mb-2">Keterangan / Paket</label>
+                        <textarea id="keterangan" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="jumlah" class="block text-gray-700 font-medium mb-2">Jumlah (Rp)</label>
+                        <input type="number" id="jumlah" placeholder="Contoh: 120000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                     <div class="mb-4">
+                        <label for="status" class="block text-gray-700 font-medium mb-2">Status Pembayaran</label>
+                        <select id="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Lunas" class="text-green-600">Lunas</option>
+                            <option value="Belum Lunas" class="text-red-600">Belum Lunas</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                        Simpan Nota
+                    </button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                <div class="flex flex-wrap justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Daftar Nota</h2>
+                    <button id="tombol-hapus-semua" class="no-print bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 text-sm mt-2 sm:mt-0">
+                        Hapus Semua Data
+                    </button>
+                </div>
+                <div id="nota-list-container" class="space-y-3">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="nota-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
+        <div id="nota-modal-content" class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start pb-4 border-b">
+                <div>
+                    <img src="https://files.catbox.moe/v3z97v.jpg" alt="Logo" class="h-12 mb-2">
+                    <p class="font-bold text-lg">BANJARSARI NETWORK / BUMDESA DAN KARANGTARUNA BANJARSARI</p>
+                    <p class="text-sm text-gray-600">Ds. Banjarsari Kec. Jetis Kab. Mojokerto</p>
+                    <p class="text-sm text-gray-600">cs@banjarsari.net</p>
+                </div>
+                <div class="text-right">
+                    <h2 class="text-3xl font-bold text-gray-800">NOTA</h2>
+                    <p class="text-sm text-gray-600" id="modal-id-nota">INV-123456789</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-start pt-4 my-4">
+                <div>
+                    <p class="font-bold">Kepada Yth:</p>
+                    <p id="modal-nama-pelanggan">Nama Pelanggan</p>
+                    <p id="modal-kontak-pelanggan" class="text-sm text-gray-600">08123456789</p>
+                </div>
+                <div class="text-right">
+                    <p><span class="font-bold">Tanggal:</span> <span id="modal-tanggal">21 Juli 2025</span></p>
+                    <p><span class="font-bold">Waktu:</span> <span id="modal-waktu">10:30 WIB</span></p>
+                    <p><span class="font-bold">Status:</span> <span id="modal-status" class="font-semibold">LUNAS</span></p>
+                </div>
+            </div>
+
+            <div class="w-full overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-800 text-white">
+                        <tr>
+                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Keterangan</th>
+                            <th class="text-right py-3 px-4 uppercase font-semibold text-sm">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <tr>
+                            <td class="text-left py-3 px-4" id="modal-keterangan">Paket Personal 10 Mbps</td>
+                            <td class="text-right py-3 px-4" id="modal-jumlah">Rp 120.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-end mt-4">
+                <div class="w-full md:w-1/2">
+                    <div class="flex justify-between py-2 border-t border-gray-300">
+                        <span class="font-bold text-lg">TOTAL</span>
+                        <span class="font-bold text-lg text-blue-600" id="modal-total">Rp 120.000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-4 border-t text-center text-gray-600">
+                <p>Terima kasih atas kepercayaan Anda.</p>
+                <div class="mt-4 no-print space-x-2">
+                    <button id="tombol-cetak-modal" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg">Cetak</button>
+                    <button id="tombol-tutup-modal" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- BAGIAN LOGIN (Tetap Sama) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const password = 'adminbanjarsari'; // GANTI PASSWORD INI
+            if (sessionStorage.getItem('auth') === 'true') {
+                showAdminContent();
+                setupNotaApp();
+            } else {
+                const pass = prompt('Masukkan Password Admin:');
+                if (pass === password) {
+                    sessionStorage.setItem('auth', 'true');
+                    showAdminContent();
+                    setupNotaApp();
+                } else {
+                    alert('Password salah! Akses ditolak.');
+                    window.location.href = 'index.html';
+                }
+            }
+        });
+
+        function showAdminContent() {
+            document.getElementById('admin-content').style.display = 'block';
+        }
+        
+        // --- BAGIAN APLIKASI NOTA (Diperbarui Total) ---
+        function setupNotaApp() {
+            const formNota = document.getElementById('form-nota');
+            const notaListContainer = document.getElementById('nota-list-container');
+            const tombolHapusSemua = document.getElementById('tombol-hapus-semua');
+            const modal = document.getElementById('nota-modal');
+            const tombolTutupModal = document.getElementById('tombol-tutup-modal');
+            const tombolCetakModal = document.getElementById('tombol-cetak-modal');
+
+            // --- FUNGSI DATABASE (localStorage) ---
+            const getNotas = () => JSON.parse(localStorage.getItem('notas')) || [];
+            const saveNotas = (notas) => localStorage.setItem('notas', JSON.stringify(notas));
+
+            // --- FUNGSI TAMPILAN ---
+            const renderNotas = () => {
+                notaListContainer.innerHTML = '';
+                const notas = getNotas().sort((a, b) => b.timestamp - a.timestamp); // Urutkan dari terbaru
+
+                if (notas.length === 0) {
+                    notaListContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada nota yang dibuat.</p>';
+                    return;
+                }
+
+                notas.forEach((nota, index) => {
+                    const statusClass = nota.status === 'Lunas' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+                    const notaCard = document.createElement('div');
+                    notaCard.className = 'flex justify-between items-center bg-gray-50 p-3 rounded-lg border hover:bg-gray-100 transition';
+                    notaCard.innerHTML = `
+                        <div class="flex-grow">
+                            <p class="font-bold">${nota.id}</p>
+                            <p class="text-gray-700">${nota.nama}</p>
+                            <p class="text-sm text-gray-500">${nota.tanggal}</p>
+                        </div>
+                        <div class="text-right">
+                             <p class="font-semibold text-lg">Rp ${new Intl.NumberFormat('id-ID').format(nota.jumlah)}</p>
+                             <span class="text-xs font-semibold px-2 py-1 rounded-full ${statusClass}">${nota.status}</span>
+                        </div>
+                        <div class="ml-4 no-print">
+                            <button class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600" onclick="window.tampilkanDetailNota(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
+                            </button>
+                             <button class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 ml-1" onclick="window.hapusNota(${index})">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+                            </button>
+                        </div>
+                    `;
+                    notaListContainer.appendChild(notaCard);
+                });
+            };
+
+            // --- FUNGSI MODAL ---
+            window.tampilkanDetailNota = (index) => {
+                const notas = getNotas().sort((a, b) => b.timestamp - a.timestamp);
+                const nota = notas[index];
+                
+                document.getElementById('modal-id-nota').innerText = nota.id;
+                document.getElementById('modal-nama-pelanggan').innerText = nota.nama;
+                document.getElementById('modal-kontak-pelanggan').innerText = nota.kontak || '-';
+                document.getElementById('modal-tanggal').innerText = nota.tanggal;
+                document.getElementById('modal-waktu').innerText = nota.waktu;
+                
+                const statusEl = document.getElementById('modal-status');
+                statusEl.innerText = nota.status;
+                statusEl.className = `font-semibold ${nota.status === 'Lunas' ? 'text-green-600' : 'text-red-600'}`;
+                
+                document.getElementById('modal-keterangan').innerText = nota.keterangan;
+                const formattedJumlah = `Rp ${new Intl.NumberFormat('id-ID').format(nota.jumlah)}`;
+                document.getElementById('modal-jumlah').innerText = formattedJumlah;
+                document.getElementById('modal-total').innerText = formattedJumlah;
+                
+                modal.style.display = 'flex';
+            };
+
+            const tutupModal = () => modal.style.display = 'none';
+
+            // --- EVENT LISTENERS ---
+            formNota.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const now = new Date();
+                
+                const newNota = {
+                    id: `INV-${Date.now()}`,
+                    timestamp: Date.now(),
+                    nama: document.getElementById('nama-pelanggan').value,
+                    kontak: document.getElementById('kontak-pelanggan').value,
+                    keterangan: document.getElementById('keterangan').value,
+                    jumlah: parseInt(document.getElementById('jumlah').value),
+                    status: document.getElementById('status').value,
+                    tanggal: now.toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' }),
+                    waktu: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB'
+                };
+
+                const notas = getNotas();
+                notas.push(newNota);
+                saveNotas(notas);
+                renderNotas();
+                formNota.reset();
+            });
+
+            window.hapusNota = (index) => {
+                 const notas = getNotas().sort((a, b) => b.timestamp - a.timestamp);
+                if (confirm(`Apakah Anda yakin ingin menghapus nota ${notas[index].id}?`)) {
+                    notas.splice(index, 1);
+                    saveNotas(notas);
+                    renderNotas();
+                }
+            };
+            
+            tombolHapusSemua.addEventListener('click', () => {
+                if (confirm('PERINGATAN! Semua data nota akan dihapus permanen. Lanjutkan?')) {
+                    localStorage.removeItem('notas');
+                    renderNotas();
+                }
+            });
+
+            tombolTutupModal.addEventListener('click', tutupModal);
+            tombolCetakModal.addEventListener('click', () => window.print());
+            modal.addEventListener('click', (e) => { // Tutup modal jika klik di luar area konten
+                if(e.target.id === 'nota-modal') tutupModal();
+            });
+
+            // --- INISIASI TAMPILAN ---
+            renderNotas();
+        }
+
+    </script>
+</body>
+</html>

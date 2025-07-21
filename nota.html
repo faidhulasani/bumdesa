@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-p">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Nota - Banjarsari.net</title>
+    <title>Admin Nota - Banjarsari.net (Firebase)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        #admin-content, #nota-modal { display: none; }
+        #admin-content, #nota-modal, #loading-indicator { display: none; }
         @media print {
             body * { visibility: hidden; }
             #nota-modal-content, #nota-modal-content * { visibility: visible; }
@@ -18,13 +19,17 @@
 </head>
 <body class="bg-gray-100">
 
+    <div id="loading-indicator" class="fixed inset-0 bg-white flex justify-center items-center">
+        <p class="text-lg font-semibold text-gray-700">Menghubungkan ke Database...</p>
+    </div>
+
     <div id="admin-content" class="container mx-auto p-4 md:p-8">
         <header class="mb-8 text-center">
-            <h1 class="text-4xl font-bold text-gray-800">Panel Admin Nota (Database Online)</h1>
-            <p class="text-gray-600">Selamat datang, Admin! Kelola semua nota pelanggan di sini.</p>
+            <h1 class="text-4xl font-bold text-gray-800">Panel Admin Nota (Firebase)</h1>
+            <p class="text-gray-600">Selamat datang, Admin! Data tersimpan online di Firebase.</p>
         </header>
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit no-print">
+             <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md h-fit no-print">
                 <h2 class="text-2xl font-bold mb-4">Buat Nota Baru</h2>
                 <form id="form-nota">
                     <div class="mb-4">
@@ -63,15 +68,14 @@
                     </button>
                 </div>
                 <div id="nota-list-container" class="space-y-3">
-                    <p class="text-gray-500 text-center py-4">Memuat data dari database...</p>
-                </div>
+                    </div>
             </div>
         </main>
     </div>
 
     <div id="nota-modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
         <div id="nota-modal-content" class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-start pb-4 border-b">
+             <div class="flex justify-between items-start pb-4 border-b">
                 <div>
                     <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9f45d750-feb5-482c-8f8c-6252cf8ef7d7.png" alt="Logo" class="h-12 mb-2">
                     <p class="font-bold text-lg">banjarsari.net</p>
@@ -124,22 +128,34 @@
             }
         });
 
-        function showAdminContent() {
+        const showAdminContent = () => {
+            document.getElementById('loading-indicator').style.display = 'none';
             document.getElementById('admin-content').style.display = 'block';
-        }
+        };
         
-        // --- BAGIAN APLIKASI NOTA (Diubah Total untuk Supabase) ---
-        async function setupNotaApp() {
-            // --- 1. KONEKSI SUPABASE ---
-            // Ganti dengan URL dan Kunci Anon dari dashboard Supabase Anda
-            const SUPABASE_URL = 'https://iauevoucknbcvhogoiys.supabase.co';
-            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhdWV2b3Vja25iY3Zob2dvaXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMTE5NDAsImV4cCI6MjA2ODY4Nzk0MH0.JhX7iB2J65QftQ1ZabZf130tOwPebqPhnhmdl10QHZQ';
-            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
-            // Variabel Global untuk menyimpan data sementara
+        // --- BAGIAN APLIKASI NOTA (Diubah untuk Firebase) ---
+        function setupNotaApp() {
+            // 1. KONEKSI FIREBASE
+            // Ganti objek di bawah ini dengan konfigurasi dari dashboard Firebase Anda
+            const firebaseConfig = {
+  apiKey: "AIzaSyDTdwQbcAK2vJ9I8I7lXraDogBm8SpbREU",
+  authDomain: "nota-banjarsari.firebaseapp.com",
+  databaseURL: "https://nota-banjarsari-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "nota-banjarsari",
+  storageBucket: "nota-banjarsari.firebasestorage.app",
+  messagingSenderId: "1004961764429",
+  appId: "1:1004961764429:web:52ffbadb986e29c98e3804"
+            };
+
+            // Inisialisasi Firebase
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            const notasRef = database.ref('notas');
+
+            // Cache untuk data
             let daftarNotaCache = [];
 
-            // --- 2. DEFINISI ELEMEN HTML ---
+            // 2. DEFINISI ELEMEN HTML
             const formNota = document.getElementById('form-nota');
             const notaListContainer = document.getElementById('nota-list-container');
             const tombolHapusSemua = document.getElementById('tombol-hapus-semua');
@@ -147,113 +163,96 @@
             const tombolTutupModal = document.getElementById('tombol-tutup-modal');
             const tombolCetakModal = document.getElementById('tombol-cetak-modal');
 
-            // --- 3. FUNGSI-FUNGSI UTAMA (CRUD) ---
-            
-            // READ: Ambil semua data dari Supabase
-            const getNotas = async () => {
-                const { data, error } = await supabase
-                    .from('nota')
-                    .select('*')
-                    .order('created_at', { ascending: false }); // Urutkan dari terbaru
+            // 3. FUNGSI UTAMA (CREATE, READ, DELETE)
+
+            // CREATE: Simpan nota baru ke Firebase
+            formNota.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const now = new Date();
                 
-                if (error) {
-                    console.error('Error mengambil data:', error);
-                    notaListContainer.innerHTML = '<p class="text-red-500 text-center py-4">Gagal memuat data. Cek koneksi atau pengaturan API.</p>';
-                    return;
-                }
-                
-                daftarNotaCache = data; // Simpan ke cache
-                renderNotas(data); // Tampilkan ke layar
-            };
+                const newNota = {
+                    nomor_nota: `INV-${Date.now()}`,
+                    timestamp: now.getTime(),
+                    nama_pelanggan: document.getElementById('nama-pelanggan').value,
+                    kontak_pelanggan: document.getElementById('kontak-pelanggan').value,
+                    keterangan: document.getElementById('keterangan').value,
+                    jumlah: parseInt(document.getElementById('jumlah').value),
+                    status: document.getElementById('status').value
+                };
 
-            // CREATE: Simpan nota baru ke Supabase
-            const addNota = async (notaBaru) => {
-                 const { data, error } = await supabase
-                    .from('nota')
-                    .insert([notaBaru]);
-                
-                if (error) {
-                    console.error('Error menyimpan data:', error);
-                    alert('Gagal menyimpan nota baru!');
-                    return;
-                }
-                
-                await getNotas(); // Muat ulang semua data setelah berhasil menyimpan
-                formNota.reset();
-            };
+                notasRef.push(newNota) // Menggunakan push() untuk ID unik
+                    .then(() => formNota.reset())
+                    .catch(err => alert('Gagal menyimpan nota:', err.message));
+            });
 
-            // DELETE: Hapus satu nota berdasarkan ID
-            window.hapusNota = async (id, nomorNota) => {
-                if (confirm(`Apakah Anda yakin ingin menghapus nota ${nomorNota}?`)) {
-                    const { error } = await supabase
-                        .from('nota')
-                        .delete()
-                        .eq('id', id);
-
-                    if (error) {
-                        console.error('Error menghapus data:', error);
-                        alert('Gagal menghapus nota!');
-                        return;
-                    }
-                    await getNotas(); // Muat ulang
-                }
-            };
-            
-            // DELETE ALL: Hapus semua nota
-            const hapusSemuaNota = async () => {
-                if (confirm('PERINGATAN! Semua data nota di database akan dihapus permanen. Lanjutkan?')) {
-                     const { error } = await supabase
-                        .from('nota')
-                        .delete()
-                        .neq('id', 0); // Trik untuk menghapus semua baris
-                    
-                    if(error){
-                         console.error('Error menghapus semua data:', error);
-                         alert('Gagal menghapus semua data!');
-                         return;
-                    }
-                    await getNotas(); // Muat ulang
-                }
-            };
-
-            // --- 4. FUNGSI TAMPILAN (RENDER & MODAL) ---
-
-            // Menampilkan daftar nota ke layar
-            const renderNotas = (notas) => {
+            // READ: Mendengarkan perubahan data dari Firebase
+            notasRef.orderByChild('timestamp').on('value', (snapshot) => {
                 notaListContainer.innerHTML = '';
-                if (!notas || notas.length === 0) {
+                daftarNotaCache = [];
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    // Firebase mengembalikan objek, kita ubah jadi array
+                    const notasArray = Object.keys(data).map(key => ({
+                        id: key, // ID unik dari Firebase
+                        ...data[key]
+                    })).reverse(); // Urutkan dari terbaru
+
+                    daftarNotaCache = notasArray;
+                    renderNotas(notasArray);
+                } else {
+                    renderNotas([]); // Tampilkan pesan kosong
+                }
+            });
+
+            // DELETE: Hapus satu nota berdasarkan ID uniknya
+            window.hapusNota = (id, nomorNota) => {
+                if (confirm(`Apakah Anda yakin ingin menghapus nota ${nomorNota}?`)) {
+                    notasRef.child(id).remove()
+                        .catch(err => alert('Gagal menghapus:', err.message));
+                }
+            };
+            
+            tombolHapusSemua.addEventListener('click', () => {
+                if (confirm('PERINGATAN! Semua data nota di database akan dihapus. Lanjutkan?')) {
+                    notasRef.remove()
+                        .catch(err => alert('Gagal menghapus semua data:', err.message));
+                }
+            });
+
+            // 4. FUNGSI TAMPILAN (RENDER & MODAL)
+            const renderNotas = (notas) => {
+                 if (notas.length === 0) {
                     notaListContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Belum ada nota yang dibuat.</p>';
                     return;
                 }
-
-                notas.forEach((nota) => {
+                notaListContainer.innerHTML = notas.map(nota => {
                     const statusClass = nota.status === 'Lunas' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-                    const notaCard = document.createElement('div');
-                    notaCard.className = 'flex justify-between items-center bg-gray-50 p-3 rounded-lg border hover:bg-gray-100 transition';
-                    notaCard.innerHTML = `
-                        <div>
-                            <p class="font-bold">${nota.nomor_nota}</p>
-                            <p class="text-gray-700">${nota.nama_pelanggan}</p>
-                            <p class="text-sm text-gray-500">${new Date(nota.created_at).toLocaleDateString('id-ID')}</p>
+                    const tgl = new Date(nota.timestamp).toLocaleDateString('id-ID');
+                    return `
+                        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border hover:bg-gray-100 transition">
+                            <div>
+                                <p class="font-bold">${nota.nomor_nota}</p>
+                                <p class="text-gray-700">${nota.nama_pelanggan}</p>
+                                <p class="text-sm text-gray-500">${tgl}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold text-lg">Rp ${new Intl.NumberFormat('id-ID').format(nota.jumlah)}</p>
+                                <span class="text-xs font-semibold px-2 py-1 rounded-full ${statusClass}">${nota.status}</span>
+                            </div>
+                            <div class="ml-4 no-print">
+                                <button class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600" onclick="window.tampilkanDetailNota('${nota.id}')"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg></button>
+                                <button class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 ml-1" onclick="window.hapusNota('${nota.id}', '${nota.nomor_nota}')"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button>
+                            </div>
                         </div>
-                        <div class="text-right">
-                             <p class="font-semibold text-lg">Rp ${new Intl.NumberFormat('id-ID').format(nota.jumlah)}</p>
-                             <span class="text-xs font-semibold px-2 py-1 rounded-full ${statusClass}">${nota.status}</span>
-                        </div>
-                        <div class="ml-4 no-print">
-                            <button class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600" onclick="window.tampilkanDetailNota(${nota.id})"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.022 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg></button>
-                            <button class="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 ml-1" onclick="window.hapusNota(${nota.id}, '${nota.nomor_nota}')"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" /></svg></button>
-                        </div>`;
-                    notaListContainer.appendChild(notaCard);
-                });
+                    `;
+                }).join('');
             };
 
-            // Menampilkan modal detail nota
             window.tampilkanDetailNota = (id) => {
                 const nota = daftarNotaCache.find(n => n.id === id);
                 if (!nota) return;
                 
-                const createdDate = new Date(nota.created_at);
+                const createdDate = new Date(nota.timestamp);
                 
                 document.getElementById('modal-id-nota').innerText = nota.nomor_nota;
                 document.getElementById('modal-nama-pelanggan').innerText = nota.nama_pelanggan;
@@ -275,27 +274,9 @@
             
             const tutupModal = () => modal.style.display = 'none';
 
-            // --- 5. EVENT LISTENERS ---
-            formNota.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const notaBaru = {
-                    nomor_nota: `INV-${Date.now()}`,
-                    nama_pelanggan: document.getElementById('nama-pelanggan').value,
-                    kontak_pelanggan: document.getElementById('kontak-pelanggan').value,
-                    keterangan: document.getElementById('keterangan').value,
-                    jumlah: parseInt(document.getElementById('jumlah').value),
-                    status: document.getElementById('status').value
-                };
-                addNota(notaBaru);
-            });
-
-            tombolHapusSemua.addEventListener('click', hapusSemuaNota);
             tombolTutupModal.addEventListener('click', tutupModal);
             tombolCetakModal.addEventListener('click', () => window.print());
             modal.addEventListener('click', (e) => { if(e.target.id === 'nota-modal') tutupModal(); });
-
-            // --- 6. INISIASI ---
-            getNotas(); // Ambil data pertama kali saat aplikasi dimuat
         }
     </script>
 </body>

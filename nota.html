@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         #admin-content, #nota-modal, #loading-indicator { display: none; }
         @media print {
@@ -103,7 +104,11 @@
                 <table class="min-w-full bg-white"><thead class="bg-gray-800 text-white"><tr><th class="text-left py-3 px-4 uppercase font-semibold text-sm">Keterangan</th><th class="text-right py-3 px-4 uppercase font-semibold text-sm">Jumlah</th></tr></thead><tbody class="text-gray-700"><tr><td class="text-left py-3 px-4" id="modal-keterangan"></td><td class="text-right py-3 px-4" id="modal-jumlah"></td></tr></tbody></table>
             </div>
             <div class="flex justify-end mt-4"><div class="w-full md:w-1/2"><div class="flex justify-between py-2 border-t border-gray-300"><span class="font-bold text-lg">TOTAL</span><span class="font-bold text-lg text-blue-600" id="modal-total"></span></div></div></div>
-            <div class="mt-8 pt-4 border-t text-center text-gray-600"><p>Terima kasih atas kepercayaan Anda.</p><div class="mt-4 no-print space-x-2"><button id="tombol-cetak-modal" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg">Cetak</button><button id="tombol-tutup-modal" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Tutup</button></div></div>
+            <div class="mt-8 pt-4 border-t text-center text-gray-600"><p>Terima kasih atas kepercayaan Anda.</p><div class="mt-4 no-print space-x-2">
+                <button id="tombol-cetak-modal" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-lg">Cetak</button>
+                <button id="tombol-simpan-gambar" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">Simpan Gambar</button>
+                <button id="tombol-tutup-modal" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg">Tutup</button>
+            </div></div>
         </div>
     </div>
 
@@ -111,15 +116,14 @@
     <script>
         // --- BAGIAN LOGIN (Tetap Sama) ---
         document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loading-indicator').style.display = 'flex';
             const password = 'csbumdesakarangtaruna'; // GANTI PASSWORD INI
             if (sessionStorage.getItem('auth') === 'true') {
-                showAdminContent();
                 setupNotaApp();
             } else {
                 const pass = prompt('Masukkan Password Admin:');
                 if (pass === password) {
                     sessionStorage.setItem('auth', 'true');
-                    showAdminContent();
                     setupNotaApp();
                 } else {
                     alert('Password salah! Akses ditolak.');
@@ -138,6 +142,7 @@
             // 1. KONEKSI FIREBASE
             // Ganti objek di bawah ini dengan konfigurasi dari dashboard Firebase Anda
             const firebaseConfig = {
+              const firebaseConfig = {
   apiKey: "AIzaSyDTdwQbcAK2vJ9I8I7lXraDogBm8SpbREU",
   authDomain: "nota-banjarsari.firebaseapp.com",
   databaseURL: "https://nota-banjarsari-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -148,7 +153,15 @@
             };
 
             // Inisialisasi Firebase
-            firebase.initializeApp(firebaseConfig);
+            try {
+                firebase.initializeApp(firebaseConfig);
+            } catch(e) {
+                console.error("Firebase initialization error:", e);
+                alert("Gagal menginisialisasi database. Periksa konfigurasi Firebase Anda.");
+                document.getElementById('loading-indicator').innerText = 'Koneksi Gagal.';
+                return;
+            }
+
             const database = firebase.database();
             const notasRef = database.ref('notas');
 
@@ -162,10 +175,10 @@
             const modal = document.getElementById('nota-modal');
             const tombolTutupModal = document.getElementById('tombol-tutup-modal');
             const tombolCetakModal = document.getElementById('tombol-cetak-modal');
+            const tombolSimpanGambar = document.getElementById('tombol-simpan-gambar');
 
             // 3. FUNGSI UTAMA (CREATE, READ, DELETE)
 
-            // CREATE: Simpan nota baru ke Firebase
             formNota.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const now = new Date();
@@ -180,31 +193,33 @@
                     status: document.getElementById('status').value
                 };
 
-                notasRef.push(newNota) // Menggunakan push() untuk ID unik
+                notasRef.push(newNota)
                     .then(() => formNota.reset())
                     .catch(err => alert('Gagal menyimpan nota:', err.message));
             });
 
-            // READ: Mendengarkan perubahan data dari Firebase
             notasRef.orderByChild('timestamp').on('value', (snapshot) => {
+                showAdminContent();
                 notaListContainer.innerHTML = '';
                 daftarNotaCache = [];
                 if (snapshot.exists()) {
                     const data = snapshot.val();
-                    // Firebase mengembalikan objek, kita ubah jadi array
                     const notasArray = Object.keys(data).map(key => ({
-                        id: key, // ID unik dari Firebase
+                        id: key,
                         ...data[key]
-                    })).reverse(); // Urutkan dari terbaru
+                    })).reverse();
 
                     daftarNotaCache = notasArray;
                     renderNotas(notasArray);
                 } else {
-                    renderNotas([]); // Tampilkan pesan kosong
+                    renderNotas([]);
                 }
+            }, (error) => {
+                console.error("Firebase read error:", error);
+                alert("Gagal membaca data dari database. Periksa koneksi internet dan aturan keamanan Firebase Anda.");
+                document.getElementById('loading-indicator').innerText = 'Gagal Baca Database.';
             });
 
-            // DELETE: Hapus satu nota berdasarkan ID uniknya
             window.hapusNota = (id, nomorNota) => {
                 if (confirm(`Apakah Anda yakin ingin menghapus nota ${nomorNota}?`)) {
                     notasRef.child(id).remove()
@@ -276,6 +291,23 @@
 
             tombolTutupModal.addEventListener('click', tutupModal);
             tombolCetakModal.addEventListener('click', () => window.print());
+            tombolSimpanGambar.addEventListener('click', () => {
+                const modalContent = document.getElementById('nota-modal-content');
+                const nomorNota = document.getElementById('modal-id-nota').innerText;
+                
+                // Opsi untuk meningkatkan kualitas gambar
+                const options = {
+                    scale: 2, // Menaikkan skala render 2x lipat
+                    useCORS: true // Diperlukan jika ada gambar dari domain lain
+                };
+
+                html2canvas(modalContent, options).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = `nota-${nomorNota}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            });
             modal.addEventListener('click', (e) => { if(e.target.id === 'nota-modal') tutupModal(); });
         }
     </script>
